@@ -1,17 +1,19 @@
 import api from "../../helper/api";
 import { MdDelete } from "react-icons/md";
-
+import toast from "react-hot-toast";
 const Department = ({ dept, onDeleted }) => {
   const deleteDepartment = async () => {
     try {
       const response = await api.delete("/authority/delete-dept", {
-        data: { departmentId: dept._id },
+        data: { deptId: dept?._id },
       });
       if (response.data.success) {
+        toast.success("Department Deleted");
+
         onDeleted();
       }
     } catch (err) {
-      console.error("Failed to delete department", err);
+             toast.error("Something Went Wrong!")
     }
   };
 

@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
 import api from '../../helper/api'
-const PostNewNotice = ({isClose}) => {
+import toast from 'react-hot-toast'
+const PostNewNotice = ({isClose, enrollmentId, getList}) => {
  const category = ["Class", "Exam", "Emergency"]
  const [title, setTitle] = useState('')
  const [content, setContent] = useState('')
  const [selectedCategory, setSelectedCategory] = useState('')
  const add = async () => {
-   const response = await api.post('/user/add-communication',{title, content, category:selectedCategory, type:'notice'})
+   const response = await api.post('/common/add-communication',{enrollmentId, title, content, category:selectedCategory, type:'notice'})
    if(response.data.success) {
     isClose()
-    console.log('success')
+      toast.success('Notice Added')
+      getList()
+   }else{
+        toast.error('Something Went Wrong!')
    }
  }
   return (

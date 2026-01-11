@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import Course from '../../components/Authority/Course'
 import AddCourse from '../../components/Authority/AddCourse'
 import { AppContext } from '../../store/AppContext'
-import { tempData } from '../../assets/tempData'
 import api from '../../helper/api'
 import TCourse from '../../components/Teacher/TCourse'
 const Courses = () => {
@@ -13,7 +12,7 @@ const Courses = () => {
   const getList = async () => {
     const response = await api.get('/authority/course-list')
     if(response.data.success){
-      setCourses(response.data.courses)
+      setCourses(response?.data?.courses)
     }
   }
   useEffect(()=>{
@@ -38,7 +37,7 @@ const Courses = () => {
   }
   </div>
     {courses.map((course)=>(
-      <Course onDeleted={getList} key={course._id} course={course} />
+      <Course onDeleted={getList} key={course?._id} course={course} />
     ))}
     </div>
   )

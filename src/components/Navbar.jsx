@@ -12,6 +12,8 @@ import IssueBox from '../pages/IssueBox'
 import Students from '../pages/CR/Students'
 import { AppContext } from '../store/AppContext'
 import { RiNotificationBadgeLine } from "react-icons/ri";
+import Lecture from '../components/Lecture'
+import Lectures from '../pages/Lectures'
 const Navbar = () => {
   const {state} = useContext(AppContext)
   const role = state?.user?.role
@@ -26,13 +28,14 @@ const Navbar = () => {
     Users: <Users />,
     Departments: <Departments />,
     Courses: <Courses />,
-    Students: <Students />
+    Enrollment: <Students />,
+    Lectures: <Lectures />
   }
   const roleItems = {
-    cr : ["Notices", "Polls", "Exams", "Issues", "Tasks", "Students"],
-    authority: ["Overview", "Users", "Departments", "Courses", "Sections"],
-    teacher: ["Courses", "Notices", "Exams"],
-    student: ["Notices", "Polls", "Exams", "Issues"]
+    cr : ["Notices", "Polls", "Exams", "Issues", "Tasks", "Enrollment"],
+    authority: ["Overview", "Users", "Departments", "Courses"],
+    teacher: ["Lectures", "Notices", "Polls", "Exams", "Issues", "Tasks", "Enrollment"],
+    student: ["Lectures", "Notices", "Polls", "Exams", "Issues", "Tasks", "Enrollment"]
   }
 
 
@@ -41,6 +44,7 @@ const Navbar = () => {
   
   return (
     <>
+
 <div className="w-full flex justify-center pt-4">
   <div className="flex flex-wrap bg-gray-100 p-1 justify-center gap-1 rounded-full shadow-inner">
     {items.map((item) => (

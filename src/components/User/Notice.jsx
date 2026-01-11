@@ -3,16 +3,19 @@ import { AppContext } from '../../store/AppContext'
 import { RiNotificationLine, RiCalendarLine } from 'react-icons/ri'
 import { FaUserAlt } from 'react-icons/fa'
 import api from '../../helper/api'
+import toast from 'react-hot-toast'
 
-const Notice = ({ notice }) => {
+const Notice = ({ notice, getList }) => {
   const { state } = useContext(AppContext)
+  const userId = state?.user?._id
   const role = state?.user?.role
   const deleteC = async() =>{
-    const response = await api.delete('/user/delete-communication',{ data: {communicationId: notice._id}})
+    const response = await api.delete('/common/delete-communication',{ data: {communicationId: notice?._id}})
     if(response.data.success){
-      console.log('deleted')
+      toast.success('Notice Deleted')
+      getList()
     }else{
-      console.log('failed')
+          toast.error('Something Went Wrong!')
     }
   }
   return (
@@ -27,6 +30,7 @@ const Notice = ({ notice }) => {
         <span className="text-xs font-mono px-3 py-1 rounded-full bg-amber-100 text-amber-700">
           {notice?.category || 'EXAM'}
         </span>
+
       </div>
 
       {/* Content */}
@@ -38,13 +42,13 @@ const Notice = ({ notice }) => {
       <div className="flex justify-between items-center text-xs text-gray-600 pt-2">
         <div className="flex items-center gap-1">
           <FaUserAlt className="text-gray-400" />
-          <span>{notice?.userId?.name || 'Anonymous'}</span>
+          <span>{notice?.createdBy?.name || 'Anonymous'} |  {notice?.enrollmentId?.courseId?.name}</span>
         </div>
         <div className="flex items-center gap-1">
           <RiCalendarLine className="text-gray-400" />
           <span>Posted: {notice.date || '2025-12-20'}</span>
         </div>
-        {(role === "cr" || role === "teacher") && (
+        {(role === "teacher" || notice?.createdBy === userId) && (
           <button onClick={deleteC} className="text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition flex items-center gap-1">
             🗑 Delete
           </button>

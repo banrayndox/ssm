@@ -3,6 +3,7 @@ import { AppContext } from "../store/AppContext";
 import api from "../helper/api.js";
 import { useNavigate } from "react-router";
 import Footer from "../components/Footer.jsx";
+import { Toaster, toast } from "react-hot-toast";
 const Auth = ({ onLogin }) => {
   const [mode, setMode] = useState("login");
   const[name,setName] = useState("")
@@ -40,27 +41,30 @@ const Auth = ({ onLogin }) => {
 
           const response = await api.post('/auth/login', {email, password})
           if(response.data.success){
-         console.log('login success')
           dispatch({
             type: "LOGIN",
             payload: response.data.user
           })
+            toast.success(`You Are Logged!`);
           navigate('/')
-         } else{
-            console.log('logout failed')
-          }      
+         }else{
+         toast.error("Something went wrong!");
+         }
         } catch (error) {
           dispatch({type: "LOGOUT"})
+        toast.error(error?.response?.data?.message || "Something went wrong!");
         }
          break;
 
 
       case "register": 
     try {
-      const response = await api.post('/auth/register',{name, email,studentId, departmentId, semester, password})
+      const response = await api.post('/auth/register',{name, email,studentId, departmentId, password})
       if(response.data.success){
-        console.log('Login in now')
+      toast.success(`Login Now!`);
         setMode('login')
+      }else{
+  toast.error("Something went wrong!");
       }
     } catch (error) {
       
@@ -197,15 +201,6 @@ const Auth = ({ onLogin }) => {
           </select>
         </div>
 
-        <div className="mb-3">
-          <label className="text-xs font-medium text-gray-600">Semester</label>
-          <input
-            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-            value={semester}
-            onChange={(e) => setSemester(e.target.value)}
-            required
-          />
-        </div>
 
         <div className="mb-3">
           <label className="text-xs font-medium text-gray-600">Password</label>

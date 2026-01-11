@@ -1,8 +1,8 @@
 import React, { use, useEffect, useState } from 'react'
 import api from '../../helper/api'
+import toast from 'react-hot-toast'
 const AddCourse = ({isClose, onAdded}) => {
 
-  const semester = ["1", "2", "3","4","5","6","7","8","9","10","11","12"]
   const [departments, setDepartments] = useState([])
   const getList = async () => {
     const response = await api.get('/authority/department-list')
@@ -14,16 +14,18 @@ const AddCourse = ({isClose, onAdded}) => {
   getList()
   },[])
   const [departmentId, setDepartmentId] = useState("")
-  const [selectedSemester, setSelectedSemester] = useState("")
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
   
     const add = async () => {
-    if(!selectedSemester || !departmentId || name=='' || code=='') return
-  const response = await api.post('/authority/add-course',{name, code, departmentId, semester: selectedSemester})
+    if( !departmentId || name=='' || code=='') return
+  const response = await api.post('/authority/add-course',{name, code, departmentId})
    if(response.data.success) {
+toast.success("Course Added");
      isClose()
      onAdded()
+   }else{
+toast.error("Something went wrong!");
    }
   }
   return (
@@ -42,13 +44,7 @@ const AddCourse = ({isClose, onAdded}) => {
       return <option key={dept._id} value={dept._id}>{dept.name}</option>
       })}
       </select>
-    <p className='text-xs font-medium text-gray-800 leading-relaxed pt-4'>Semester</p>
-      <select name="semester" className='text-gray-600 bg-gray-100 w-[99%] p-2 rounded-md text-sm mt-1' onChange={(e) => setSelectedSemester(e.target.value)}>
-    <option value="" disabled selected className='text-xs'>Choose a Semester</option>
-      {semester.map((sem,i)=>{
-      return <option key={i} value={sem}>{sem}</option>
-      })}
-      </select>
+
 
       <p className='text-xs font-medium text-gray-800 leading-relaxed pt-4'>Course Name</p>
       <input type="text" placeholder='e.g., Data Structure' className='text-gray-600 bg-gray-100 w-[99%] p-2 rounded-md text-sm mt-1' onChange={(e)=>setName(e.target.value)}/>

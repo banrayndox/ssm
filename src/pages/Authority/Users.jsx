@@ -5,12 +5,12 @@ import Student from '../../components/CR/Student'
 import api from '../../helper/api'
 const Users = () => {
   const [students, setStudents] = useState([])
-  const item = ["ALL","STUDENTS", "TEACHER","CR"]
+  const item = ["ALL","STUDENTS", "TEACHER"]
   const [active,setActive] = useState("ALL")
   const getList = async () => {
     const response = await api.get('/authority/users-list')
-    if(response.data.success){
-      setStudents(response.data.users)
+    if(response.data?.success){
+      setStudents(response.data?.users)
     }
   }
   useEffect(()=>{
@@ -19,7 +19,6 @@ const Users = () => {
     const filteredStudents = students.filter(student => {
     if (active === "ALL") return true
     if (active === "STUDENTS") return student.role === "student"
-    if (active === "CR") return student.role === "cr"
     if (active === "TEACHER") return student.role === "teacher"
     return true
   })
@@ -37,7 +36,7 @@ const Users = () => {
            ))}
         </div>
         </div>
-      {filteredStudents.map((student) => (<Student onDeleted={getList} key={student._id} student={student} text="remove" />))}        
+      {filteredStudents.map((student) => (<Student onDeleted={getList} key={student?._id} student={student} text="remove" />))}        
 
     </div>
   )

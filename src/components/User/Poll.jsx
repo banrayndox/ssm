@@ -2,8 +2,9 @@ import React, { useContext, useState, useEffect } from 'react'
 import { AppContext } from '../../store/AppContext'
 import { FaVoteYea, FaCalendarAlt, FaTrash } from 'react-icons/fa'
 import api from '../../helper/api'
+import toast from 'react-hot-toast'
 
-const Poll = ({ poll }) => {
+const Poll = ({ poll,getList }) => {
   const { state } = useContext(AppContext)
   const role = state?.user?.role
   const userId = state?.user?._id
@@ -12,10 +13,9 @@ const Poll = ({ poll }) => {
   const [votedOption, setVotedOption] = useState(null)
 const getResult = async () => {
     try {
-      const response = await api.post('/user/vote-result', { pollId: poll._id })
+      const response = await api.post('/common/vote-result', { pollId: poll._id })
       if (response.data.success) {
         const result = response.data.result
-        console.log(result)
         setVotes1(result.option1Votes?.length || 0)
         setVotes2(result.option2Votes?.length || 0)
         if (result.option1Votes?.some(u => u.toString() === userId)) setVotedOption('option1')
@@ -32,16 +32,15 @@ useEffect(()=>{
   const handleVote = async (option) => {
     if (!option) return
     try {
-      const response = await api.post('/user/vote', {
+      const response = await api.post('/common/vote', {
         pollId: poll._id,
         selectedOption: option
       })
       if (response.data.success) {
-        console.log('success')
-        // Refresh votes immediately
+    toast.success('Voted!')
         getResult()
       }else{
-        console.log('failed')
+    toast.error('Something Went Wrong!')
       }
     } catch (err) {
       console.error('Voting error:', err)
@@ -51,8 +50,13 @@ useEffect(()=>{
 
   const deleteC = async () => {
     try {
-      const response = await api.delete('/user/delete-communication', { data: { communicationId: poll._id } })
-      if (response.data.success) console.log('deleted')
+      const response = await api.delete('/common/delete-communication', { data: { communicationId: poll._id } })
+      if (response.data.success) {
+      toast.success('Poll Deleted')
+      getList()
+      }else{
+            toast.error('Something Went Wrong!')
+      }
     } catch (err) {
       console.error(err)
     }
@@ -98,10 +102,14 @@ useEffect(()=>{
 
       {/* Footer */}
       <div className="flex justify-between items-center text-xs text-gray-500 mt-3 px-1">
+          
+        <p className="flex items-center gap-1">
+          <FaCalendarAlt /> By: {poll?.createdBy?.name }
+        </p>
         <p className="flex items-center gap-1">
           <FaCalendarAlt /> Ends: {poll?.endDate || "2025-12-23"}
         </p>
-        {role === "cr" && (
+        {role === "teacher" && (
           <button 
             onClick={deleteC} 
             className="flex items-center gap-1 bg-white text-gray-900 border border-gray-300 rounded-md text-xs hover:bg-red-50 hover:text-red-600 transition font-semibold px-2 py-1"
@@ -110,6 +118,7 @@ useEffect(()=>{
           </button>
         )}
       </div>
+      <p className="text-xs text-gray-500"> {poll?.enrollmentId?.courseId?.name}</p>
     </div>
   )
 }

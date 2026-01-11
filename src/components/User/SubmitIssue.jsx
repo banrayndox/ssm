@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import api from '../../helper/api'
-const SubmitIssue = ({isClose}) => {
+import toast from 'react-hot-toast'
+const SubmitIssue = ({isClose, enrollmentId, getList}) => {
     const category = ["Classroom", "Facilities", "Academic", "Other" ]
     const [selectedCategory, setSelectedCategory] = useState('')
     const [content, setContent] = useState('')
     const add = async () => {
-    const response = await api.post('/user/add-issue',{category:selectedCategory, content, status: 'pending'})
+    const response = await api.post('/student/add-issue',{category:selectedCategory, content, status: 'pending', enrollmentId, type:'issue'})
     if(response.data.success){
-      // isClose()
-      console.log('Success')
+      isClose()
+      getList()
+       toast.success('Issue Added')
     }else{
-      console.log('failed')
+      toast.error('Something went wrong!')
     }
     }
   return (

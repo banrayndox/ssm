@@ -7,27 +7,27 @@ export const AppContext = createContext()
 const ContextProvider = ({children}) => {
     const initialState = {
     user: null,
-    isLogged: false
+    isLogged: false,
+     loading: true,
     }
     const [state, dispatch] = useReducer(appReducer, initialState)
 
-    const isAuth = async() =>{
-try {
-    const response = await api.get('/auth/get-authenticated');
-    
-    // শুধু যদি response এ ইউজার ডাটা থাকে তবেই লগইন হবে
-    if (response.data && response.data.user) {
-      dispatch({ type: "LOGIN", payload: response.data.user });
-    } else {
-      // যদি ডাটা না থাকে (কুকি ক্লিয়ার থাকলেও অনেক সময় 200 আসে)
+
+  const isAuth = async () => {
+    try {
+      const response = await api.get('/auth/get-authenticated');
+      if (response.data.success && response.data.user) {
+        dispatch({ type: "LOGIN", payload: response.data.user });
+      } else {
+        dispatch({ type: "LOGOUT" });
+      }
+    } catch (error) {
+      await api.get('/auth/logout');
       dispatch({ type: "LOGOUT" });
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false }); // done checking
     }
-  }catch (error) {
-       await api.get('/auth/logout')
-        dispatch({type: "LOGOUT"})
-     }
- 
-    }
+  };
    useEffect(()=>{
      isAuth()
    },[])

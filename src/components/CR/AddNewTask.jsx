@@ -1,18 +1,20 @@
 import { useState } from "react"
 import api from "../../helper/api"
-const AddNewTask = ({isClose}) => {
+import toast from "react-hot-toast"
+const AddNewTask = ({isClose, getList}) => {
     const priority = ["high", "medium", "low"]
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [dueDate, setDueDet] = useState('')
   const [selectedPriority, setSelectedPriority] = useState('')
      const add = async () => {
-    const response = await api.post('/user/add-communication',{type:'task', title, content, dueDate, priority: selectedPriority})
+    const response = await api.post('/common/add-task',{ title, content, dueDate, priority: selectedPriority})
     if(response.data.success){
-      console.log('success')
+      toast.success('Task Added')
       isClose()
+      getList()
     }else{
-      console.log('Failed')
+          toast.error('Something Went Wrong!')
     }
   }
   return (

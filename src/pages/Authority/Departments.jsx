@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import Deptarment from '../../components/Authority/Deptarment'
 import AddNewDepartment from '../../components/Authority/AddNewDepartment';
-
 import api from '../../helper/api.js'
 const Departments = () => {
   const [departments, setDepartments] = useState([])
   const getList = async () => {
     const response = await api.get('/authority/department-list')
-    if(response.data.success){
-      setDepartments(response.data.departments)
+    if(response.data?.success){
+      setDepartments(response.data?.departments)
     }
   }
   useEffect(()=>{
@@ -37,7 +36,7 @@ const Departments = () => {
         </div>
         </div>  
  {departments.map(dept => (
-   <Deptarment  onDeleted={getList} key={dept._id} dept={dept} />
+   <Deptarment  onDeleted={getList} key={dept?._id} dept={dept} />
   ))}
   </div> 
   )

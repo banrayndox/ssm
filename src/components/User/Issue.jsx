@@ -3,8 +3,8 @@ import { AppContext } from '../../store/AppContext'
 import { FaThumbsUp, FaClock, FaCheckCircle } from 'react-icons/fa'
 import { MdReport } from 'react-icons/md'
 import api from '../../helper/api'
-
-const Issue = ({ issue }) => {
+import toast from 'react-hot-toast'
+const Issue = ({ issue  }) => {
   const { state } = useContext(AppContext)
   const role = state?.user?.role
   const [upvotes, setUpvotes] = useState(issue.upvotes?.length || 0)
@@ -12,23 +12,29 @@ const Issue = ({ issue }) => {
 
   const handleUpvote = async () => {
     try {
-      const response = await api.post('/user/upvote', { id: issue?._id })
+      const response = await api.post('/common/upvote', { id: issue?._id })
       if (response.data.success) {
         setUpvotes(response.data.upvotes?.length || 0)
+             toast.success('Upvoted')
+      }else{
+           toast.error('Something Went Wrong!')
       }
     } catch (err) {
-      console.error(err)
+       toast.error('Something Went Wrong!')
     }
   }
 
   const done = async () => {
     try {
-      const response = await api.post('/user/resolve', { issueId: issue._id })
-      if (response.data.success) {
+      const response = await api.post('/common/resolve', { issueId: issue._id })
+      if (response?.data?.success) {
+        toast.success('Issue Resolved')
         setStatus('resolved')
+      }else{
+        toast.error('Something Went Wrong!')
       }
     } catch (err) {
-      console.error(err)
+        toast.error('Something Went Wrong!')
     }
   }
 
@@ -40,7 +46,7 @@ const Issue = ({ issue }) => {
        
         <div>
           <h2 className="text-xs font-semibold text-gray-900">
-            Reported by: <span className="font-normal">{issue.userId?.name || "Anonymous"}</span>
+            Reported by: <span className="font-normal">{ issue?.createdBy?.name || "Anonymous"} | {issue?.enrollmentId?.courseId?.name}</span>
           </h2>
         </div>
       {/* Badges */}
@@ -66,9 +72,9 @@ const Issue = ({ issue }) => {
 
       {/* Dates */}
       <div className="flex flex-col sm:flex-row sm:justify-between text-xs text-gray-500 gap-1">
-        <div className="flex items-center gap-1">
-          <MdReport className="text-gray-400" /> Reported: {formatDate(issue.reportedAt)}
-        </div>
+        {/* <div className="flex items-center gap-1">
+          <MdReport className="text-gray-400" /> Reported: {formatDate(issue?.reportedAt)}
+        </div> */}
         {status === 'resolved' && (
           <div className="flex items-center gap-1">
             <FaCheckCircle className="text-green-400" /> Resolved: {formatDate(issue.resolvedAt)}
@@ -92,7 +98,7 @@ const Issue = ({ issue }) => {
             </button>
           )}
 
-          {role === 'cr' && status === 'pending' && (
+          {(role === "teacher"  && status !== 'resolved') && (
             <button
               onClick={done}
               className="text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 transition flex items-center gap-1"

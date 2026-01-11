@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Student from './Student'
-import Profile from '../../pages/Profile';
 
-const AssignedStudents = ({student}) => {
+const AssignedStudents = ({student, selectedCourse, enrollmentId, isAssigned}) => {
     const [profileOpen, setProfileOpen] = useState(false);
     const [profileId, setProfileId] = useState(null);
 
@@ -10,7 +9,7 @@ const AssignedStudents = ({student}) => {
   return (
     <>
 
-       {student.map(student => <Student student={student} text="assign" />)}
+       {student.map((student,i) => <Student key={i} student={student} isAssigned={isAssigned} enrollmentId={enrollmentId} selectedCourse={selectedCourse} text="assign" />)}
 
     </>
   )

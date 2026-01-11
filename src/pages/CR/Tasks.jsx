@@ -10,9 +10,9 @@ const Tasks = () => {
 
  const [list, setList] = useState([])
    const getList = async () => {
-    const response = await api.post('/user/get-communication',{type:'task'})
+    const response = await api.get('/common/get-task')
     if(response.data.success){
-      setList(response.data.communications)
+      setList(response.data.tasks)
     }
   }
   useEffect(()=>{
@@ -26,7 +26,7 @@ const Tasks = () => {
       <div className="flex fixed inset-0 z-50 items-center justify-center">
       <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsOpen(false)}></div>
       <div className="absolute">
-       <AddNewTask isClose={()=> setIsOpen(false)} />
+       <AddNewTask getList={getList} isClose={()=> setIsOpen(false)} />
        </div>
        </div>
       ) } 
@@ -34,13 +34,12 @@ const Tasks = () => {
    <FaTasks />
         <span className="text-xl font-medium">My TO-DO Table</span>
       </div>        
-   { (role == "cr")  &&
-    (<button onClick={()=>setIsOpen(true)} className={"text-sm font-mono border-[1px]  rounded-lg px-6 py-1 transition scale-x-95 bg-black text-white hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300 "}>Add New Task</button>
-    )
-  }
+   
+    <button onClick={()=>setIsOpen(true)} className={"text-sm font-mono border-[1px]  rounded-lg px-6 py-1 transition scale-x-95 bg-black text-white hover:bg-gray-200 hover:text-gray-800 hover:border-gray-300 "}>Add New Task</button>
+
     </div> 
      {list.map(task => (
-        <Task key={task._id} task={task} />
+        <Task getList={getList} key={task?._id} task={task} />
       ))}     
     </div>
   )

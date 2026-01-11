@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import api from "../helper/api";
 import { AppContext } from "../store/AppContext";
-
-const Profile = ({userId}) => {
-  console.log(userId)
+  import toast from "react-hot-toast";
+const Profile = ({userId, isClose}) => {
  const {state} = useContext(AppContext)
  const currId = state?.user?._id
   const [tab, setTab] = useState("view");
@@ -24,10 +23,9 @@ const Profile = ({userId}) => {
   const [roomNo, setRoomNo] = useState(null);
 
   const getProfile = async() => {
-    const response = await api.post('/user/profile',{userId})
+    const response = await api.post('/common/profile',{userId})
     if(response.data.success){
       const user = response.data.user
-      console.log(response.data)
     setName(user?.name)
     setEmail(user?.email)
     setSemester(user?.semester)
@@ -48,35 +46,28 @@ const Profile = ({userId}) => {
 
   const handleDeleteProfile = async () => {
     if (window.confirm("Are you sure you want to delete your profile?")) {
-     const response  = await api.delete('/user/delete-profile')
+     const response  = await api.delete('/common/delete-profile')
      if(response.data.success){
-      console.log('profile deleted')
+      toast.success('Profile Deleted')
+     isClose()
      }else{
-      console.log('failed')
+    toast.error('Something Went Wrong!')
      }
 
     }
   };
 
 const handleEditProfile = async () =>{
-    const response  = await api.post('/user/edit-profile',{address})
+    const response  = await api.post('/common/edit-profile',{address})
      if(response.data.success){
-      console.log('profile edited')
+      toast.success('Profile Updated')
+      isClose()
      }else{
-      console.log('failed')
+      toast.error('Something Went Wrong!')
      }
 
 }
-  const handleLeaveSection =  async () => {
-    if (window.confirm("Are you sure you want to leave this section?")) {
-      const response  = await api.post('/user/exit-section')
-      if(response.data.success){
-      console.log('profile edited')
-     }else{
-      console.log('failed')
-     }
-    }
-  };
+
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -139,13 +130,6 @@ const handleEditProfile = async () =>{
                 <Info label="semester" value={semester} />
                 <Info label="Section" value={section} />
                 <Info label="Role" value={role} />
- {userId == currId &&
-                <button
-                  onClick={handleLeaveSection}
-                  className="text-xs text-red-600 underline mt-4"
-                >
-                  Leave Section
-                </button> }
               </Section> 
             )}
 
@@ -167,12 +151,7 @@ const handleEditProfile = async () =>{
               </Section>
             )}
 
-   
-            {role === "authority" && (
-              <p className="text-green-700 font-medium">
-                Authority Access Enabled
-              </p>
-            )}
+  
           </div>
         )}
 

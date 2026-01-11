@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Deptarment from './Deptarment'
 import api from '../../helper/api'
+import toast from 'react-hot-toast'
 const AddTeacher = ({isClose, added}) => {
   const [departments, setDepartments] = useState([])
   const [name, setName] = useState('')
@@ -21,8 +22,11 @@ const AddTeacher = ({isClose, added}) => {
   const add = async() =>{
     const response = await api.post('/authority/add-teacher',{name, email, teacherInitial: initialId, teacherId: teacherCode, roomNo: room, role:'teacher', departmentId})
     if(response.data.success){
+      toast.success("New Teacher Added");
       added()
       isClose()
+    }else{
+      toast.error("Something Went Wrong!");
     }
   }
   return (

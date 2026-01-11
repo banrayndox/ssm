@@ -2,19 +2,16 @@ import { useState, useContext } from "react";
 import { AppContext } from "../store/AppContext.jsx";
 import { useNavigate } from "react-router";
 import api from "../helper/api.js";
-
+import toast from "react-hot-toast";
 import Navbar from "./Navbar.jsx";
 import Footer from "./Footer.jsx";
 import Profile from "../pages/Profile.jsx";
 
 import { FaUserCircle } from "react-icons/fa";
-import RequestJoinSection from "./User/RequestJoinSection.jsx";
-import CancelJoinRequest from "./User/CancelJoinRequest.jsx";
 
 const Header = () => {
   const { state, dispatch } = useContext(AppContext);
   const user = state?.user;
-  console.log(user)
   const navigate = useNavigate();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -23,6 +20,7 @@ const Header = () => {
     try {
       await api.get("/auth/logout");
       dispatch({ type: "LOGOUT" });
+           toast.success(`You Are Logged Out!`);
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -39,7 +37,7 @@ const Header = () => {
             onClick={() => setProfileOpen(false)}
           ></div>
           <div className="relative z-50">
-            <Profile userId={state?.user?._id} isClose={() => setProfileOpen(false)} />
+            <Profile userId={state?.user?._id} isClose={() => setProfileOpen(false)}  />
           </div>
         </div>
       )}
@@ -76,10 +74,9 @@ const Header = () => {
 
 
       <div className="h-14"></div>
-     {user?.role!='authority' && user?.sectionId==null && user?.reqToJoinSectionId==null && <RequestJoinSection /> }
-      {user?.role!='authority' && user?.sectionId==null && user?.reqToJoinSectionId!=null && <CancelJoinRequest /> }
-      { user?.sectionId!=null && <Navbar />}
-      {user?.role=='authority' && <Navbar />}
+      {/* <JoinCourse /> */}
+      {/* <CreateCourse /> */}
+     <Navbar />
       <Footer />
     </>
   );

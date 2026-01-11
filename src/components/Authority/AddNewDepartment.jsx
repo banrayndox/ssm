@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import api from '../../helper/api'
+import toast from 'react-hot-toast'
 const AddNewDepartment = ({onClose, onAdded}) => {
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
@@ -9,6 +10,9 @@ const AddNewDepartment = ({onClose, onAdded}) => {
    if(response.data.success) {
      onClose()
      onAdded()
+     toast.success("Department Added");
+   }else{
+    toast.error("Something went wrong");
    }
   }
 

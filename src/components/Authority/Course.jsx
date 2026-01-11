@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import api from "../../helper/api";
 import { AppContext } from "../../store/AppContext";
 import { MdDelete } from "react-icons/md";
-
+import toast from "react-hot-toast";
 const Course = ({ course, onDeleted }) => {
   const { state } = useContext(AppContext);
   const role = state?.user?.role;
@@ -13,10 +13,11 @@ const Course = ({ course, onDeleted }) => {
         data: { courseId: course._id },
       });
       if (response.data.success) {
+        toast.success("Course Deleted");
         onDeleted();
       }
     } catch (err) {
-      console.error("Failed to delete course", err);
+  toast.error('Something went wrong!')
     }
   };
 

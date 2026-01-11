@@ -3,15 +3,17 @@ import { AppContext } from '../../store/AppContext'
 import { RiCalendarLine } from 'react-icons/ri'
 import { FaBook } from 'react-icons/fa'
 import api from '../../helper/api'
-const Exam = ({ exam }) => {
+import toast from 'react-hot-toast'
+const Exam = ({ exam, getList }) => {
   const { state } = useContext(AppContext)
   const role = state?.user?.role
   const deleteC = async() =>{
-    const response = await api.delete('/user/delete-communication',{ data: {communicationId: exam._id}})
+    const response = await api.delete('/common/delete-communication',{ data: {communicationId: exam._id}})
     if(response.data.success){
-      console.log('deleted')
+          toast.success('Exam Deleted')
+          getList()
     }else{
-      console.log('failed')
+     toast.error('Something Went Wrong!')
     }
   }
   return (
@@ -21,7 +23,7 @@ const Exam = ({ exam }) => {
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-            <RiCalendarLine className="text-gray-500" /> {exam?.courseId?.name}
+            <RiCalendarLine className="text-gray-500" /> {exam?.enrollmentId?.courseId?.name}
           </h1>
  
         </div>
@@ -52,7 +54,7 @@ const Exam = ({ exam }) => {
       </div>
 
       {/* Action */}
-      {(role === "teacher" || role==='cr' )&& (
+      {(role === "teacher" )&& (
         <div className="flex justify-end pt-1">
           <button onClick={deleteC} className="text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition flex items-center gap-1">
             🗑 Delete

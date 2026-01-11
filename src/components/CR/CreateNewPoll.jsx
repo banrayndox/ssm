@@ -1,17 +1,19 @@
 import React, { useContext, useState } from 'react'
 import api from '../../helper/api'
-const CreateNewPoll = ({isClose}) => {
+import toast from 'react-hot-toast'
+const CreateNewPoll = ({isClose, enrollmentId, getList}) => {
 
   const [content, setContent] = useState('')
   const [option1, setOption1] = useState('')
   const [option2, setOption2] = useState('')
      const add = async () => {
-    const response = await api.post('/user/add-communication',{type:'poll',  content, option1, option2})
+    const response = await api.post('/common/add-communication',{enrollmentId, type:'poll',  content, option1, option2})
     if(response.data.success){
-      console.log('success')
+      getList()
       isClose()
+      toast.success('Poll Added')
     }else{
-      console.log('Failed')
+          toast.error('Something Went Wrong!')
     }
   }
   return (

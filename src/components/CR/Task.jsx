@@ -3,15 +3,17 @@ import { AppContext } from '../../store/AppContext'
 import { RiAlarmWarningLine } from "react-icons/ri"
 import { BsFlag } from "react-icons/bs"
 import api from '../../helper/api'
-const Task = ({ task }) => {
+import toast from 'react-hot-toast'
+const Task = ({ task, getList }) => {
   const { state } = useContext(AppContext)
   const role = state?.user?.role
    const deleteC = async() =>{
-     const response = await api.delete('/user/delete-communication',{ data: {communicationId: task._id}})
+     const response = await api.delete('/common/delete-task',{ data: {taskId: task._id}})
      if(response.data.success){
-       console.log('deleted')
+       toast.success('Task Deleted')
+       getList()
      }else{
-       console.log('failed')
+    toast.error('Something Went Wrong!')
      }
    }
   return (
@@ -48,11 +50,11 @@ const Task = ({ task }) => {
           {task?.isOverdue ? `${task.overdueDays || 0} days overdue` : "On track"}
         </p>
 
-        {role === "cr" && (
+  
           <button onClick={deleteC} className="text-xs font-semibold px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition flex items-center gap-1">
             DELETE
           </button>
-        )}
+  
       </div>
     </div>
   )
