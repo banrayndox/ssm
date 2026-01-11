@@ -18,7 +18,9 @@ const Header = () => {
 
   const logoutHandler = async () => {
     try {
-      await api.get("/auth/logout");
+     const res = await api.get("/auth/logout");
+     if(res?.data?.success) console.log('Logout done');
+     
       dispatch({ type: "LOGOUT" });
            toast.success(`You Are Logged Out!`);
       navigate("/");
