@@ -18,12 +18,10 @@ const Header = () => {
 
   const logoutHandler = async () => {
     try {
-     const res = await api.get("/auth/logout");
-     if(res?.data?.success) console.log('Logout done');
-     
-      dispatch({ type: "LOGOUT" });
-           toast.success(`You Are Logged Out!`);
-      navigate("/");
+  await api.get("/auth/logout");
+   dispatch({ type: "LOGOUT" });
+   toast.success(`You Are Logged Out!`);
+   navigate("/");
     } catch (error) {
       console.log(error);
     }
