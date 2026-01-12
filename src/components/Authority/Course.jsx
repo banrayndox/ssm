@@ -35,8 +35,8 @@ const Course = ({ course, onDeleted }) => {
           </div>
 
           <div className="flex gap-4 mt-2 text-xs text-gray-500">
-            <p>Department: Computer Science</p>
-            <p>Semester: {course?.semester}</p>
+            <p>Department: {course?.departmentId?.name}</p>
+  
           </div>
         </div>
       </div>

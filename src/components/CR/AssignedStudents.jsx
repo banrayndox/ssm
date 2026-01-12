@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Student from './Student'
 
-const AssignedStudents = ({student, selectedCourse, enrollmentId, isAssigned}) => {
+const AssignedStudents = ({student, selectedCourse, enrollmentId, isAssigned, getEnrolled}) => {
     const [profileOpen, setProfileOpen] = useState(false);
     const [profileId, setProfileId] = useState(null);
 
@@ -9,7 +9,7 @@ const AssignedStudents = ({student, selectedCourse, enrollmentId, isAssigned}) =
   return (
     <>
 
-       {student.map((student,i) => <Student key={i} student={student} isAssigned={isAssigned} enrollmentId={enrollmentId} selectedCourse={selectedCourse} text="assign" />)}
+       {student.map((student,i) => <Student key={i} student={student} isAssigned={isAssigned} enrollmentId={enrollmentId} selectedCourse={selectedCourse} getEnrolled={getEnrolled} text="assign" />)}
 
     </>
   )

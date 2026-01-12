@@ -2,18 +2,24 @@ import React, { useState } from 'react'
 import api from '../../helper/api'
 import {toast} from 'react-hot-toast'
 
-const ChangePassKey =({onClose, onAdded, enrollmentId}) => {
+const ChangePassKey =({onClose, onAdded, enrollmentId, getEnrolled}) => {
   const [passkey, setPasskey] = useState('')
     const add = async () => {
-    if(passkey=='' )  return toast.error('Enter passkey')
-  const response = await api.post('/teacher/update-passkey',{enrollmentId,newPassKey: passkey})
+    if(passkey=='' )  return toast.error('PassKey is blank!!')
+    if(passkey.length < 12 ) return toast.error('PassKey should more than 11 characters')  
+  try {
+    const response = await api.post('/teacher/update-passkey',{enrollmentId,newPassKey: passkey})
    if(response?.data?.success) {
       toast.success('PassKey Changed')
      onClose()
      onAdded()
+     getEnrolled()
    }else{
      toast.error('Something went wrong!')
    }
+  } catch (error) {
+     toast.error(error.response.data.message)
+  }
   }
 
   return (

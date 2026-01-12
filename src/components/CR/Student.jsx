@@ -5,7 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { FaUserCircle } from "react-icons/fa";
 import Profile from "../../pages/Profile";
 import toast from "react-hot-toast";
-const Student = ({ student, text, onDeleted, enrollmentId, isAssigned }) => {
+const Student = ({ student, text, onDeleted, enrollmentId, isAssigned, getEnrolled }) => {
   const { state } = useContext(AppContext);
   const role = state?.user?.role;
 
@@ -21,6 +21,7 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned }) => {
       });
       if (res.data.success) {
         onDeleted && onDeleted();
+        getEnrolled()
              toast.success('Student Removed From Course')
       }else{
             toast.error('Something Went Wrong!')
@@ -36,6 +37,7 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned }) => {
       enrollmentId
     })
     if(res.data.success){
+      getEnrolled()
       toast.success('CR Assigned')
     }else{
     toast.error('Something Went Wrong!')
@@ -96,7 +98,7 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned }) => {
               {student?.name}
             </p>
             <p className="text-xs text-gray-500">
-              ID: {student?.studentId || "N/A"}
+              ID: {student?.studentId || student?.teacherId}
             </p>
           </div>
         </div>

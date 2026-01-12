@@ -33,7 +33,7 @@ const ContextProvider = ({children}) => {
    },[])
 
     return(
-        <AppContext.Provider value={{state, dispatch}}>
+        <AppContext.Provider value={{state, dispatch, isAuth}}>
         {children}
         </AppContext.Provider>
     )

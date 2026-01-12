@@ -4,15 +4,21 @@ import toast from 'react-hot-toast'
 const JoinCourse =({onClose, onAdded}) => {
   const [passkey, setPasskey] = useState('')
     const add = async () => {
-    if(passkey=='' ) return
-  const response = await api.post('/student/join-course',{passKey: passkey})
+    
+    if(passkey=='' ) return toast.error('Blank PassKey not allowed!!')
+    if(passkey.length < 12) return toast.error('PassKey should more than 11 characters!')
+try {
+    const response = await api.post('/student/join-course',{passKey: passkey})
    if(response.data.success) {
      onClose()
      onAdded()
  toast.success('Course Enrolled Successfully')
    }else{
-    toast.error('Something went wrong')
+    toast.error('Invalid PassKey')
    }
+} catch (error) {
+   toast.error('Invalid PassKey')
+}
   }
 
   return (

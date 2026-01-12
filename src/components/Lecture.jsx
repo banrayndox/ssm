@@ -62,12 +62,13 @@ const Lecture = ({ lecture,  getList }) => {
       {/* Resources */}
       {lectureInfo.resources?.length > 0 && (
         <div className="flex flex-col gap-1 text-xs text-gray-700">
-          <h2 className="font-medium text-gray-800 flex items-center gap-1">
+          {/* <h2 className="font-medium text-gray-800 flex items-center gap-1">
             <RiVideoLine /> Resources
-          </h2>
-          <ul className="list-disc list-inside">
+          </h2> */}
+          <ul className=" list-inside">
             {lectureInfo.resources.map((res, idx) => (
-              <li key={idx}>
+           <li key={idx}>
+             {res?.title ?  
                 <a
                  href={res.url.startsWith('http') ? res.url : 'https://' + res.url}
                   target="_blank"
@@ -76,7 +77,8 @@ const Lecture = ({ lecture,  getList }) => {
                 >
                   {res.title} ({res.type})
                 </a>
-              </li>
+                : null }
+              </li> 
             ))}
           </ul>
         </div>

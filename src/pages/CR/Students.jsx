@@ -21,6 +21,7 @@ const Students = () => {
       enrollmentId: selectedCourse
     })
     if(res.data.success){
+      getEnrolled()
      toast.success('CR Removed')
     }else{
       toast.error('Something went wrong')
@@ -44,20 +45,30 @@ const Students = () => {
 
 
   useEffect(()=>{
- if(selectedCourse!='all'){
+
   getEnrolled()
- }
+ 
   },[selectedCourse])
 
-  // Fetch courses from profile for filter dropdown
-  useEffect(() => {
-    if (role === "student" ) {
-      setCourses(state.user.enrolledCourses || []);
-    } else if (role === "teacher") {
-      setCourses(state.user.createdCourses || []);
-    } 
-  }, []);
 
+  const refreshUserCourses = async () => {
+  try {
+    const res = await api.get("/auth/get-authenticated"); 
+    if (res.data.success) {
+    
+      if (role === "teacher") {
+        setCourses(res.data.user.createdCourses || []);
+      } else if (role === "student") {
+        setCourses(res.data.user.enrolledCourses || []);
+      }
+    }
+  } catch (err) {
+    console.error("Failed to refresh user courses:", err);
+  }
+};
+useEffect(() => {
+  refreshUserCourses();
+}, []);
 const [teacher, setTeacher] = useState(null);
 const [cr, setCr] = useState(null);
   const [passkey, setPasskey] = useState(null)
@@ -71,23 +82,23 @@ const [cr, setCr] = useState(null);
       <div className="flex fixed inset-0 z-50 items-center justify-center">
       <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsOpen(false)}></div>
       <div className="absolute">
-       <CreateCourse onAdded={()=>setSelectedCourse(selectedCourse)} onClose={()=> setIsOpen(false)} />
+       <CreateCourse onAdded={refreshUserCourses} onClose={()=> setIsOpen(false)} />
        </div>
        </div>
       ) } 
         {isSOpen && (
       <div className="flex fixed inset-0 z-50 items-center justify-center">
-      <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsOpen(false)}></div>
+      <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsSOpen(false)}></div>
       <div className="absolute">
-       <JoinCourse onAdded={()=>setSelectedCourse(selectedCourse)} onClose={()=> setIsSOpen(false)} />
+       <JoinCourse onAdded={refreshUserCourses} onClose={()=> setIsSOpen(false)} />
        </div>
        </div>
       ) } 
        {isCOpen && (
       <div className="flex fixed inset-0 z-50 items-center justify-center">
-      <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsOpen(false)}></div>
+      <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsCOpen(false)}></div>
       <div className="absolute">
-       <ChangePassKey enrollmentId={selectedCourse} onAdded={()=>setSelectedCourse(selectedCourse)} onClose={()=> setIsSOpen(false)} />
+       <ChangePassKey enrollmentId={selectedCourse} onAdded={refreshUserCourses}  getEnrolled={getEnrolled} onClose={()=> setIsCOpen(false)} />
        </div>
        </div>
       ) } 
@@ -163,16 +174,14 @@ const [cr, setCr] = useState(null);
   )}
 </div>
 
-      
-
-{courses.length == 0 && <p> No Courses Available</p>}
+    
       {/* Students list */}
-      <div className="w-full flex flex-col lg:flex-row gap-6">
+      <div className="w-full flex flex-col md:flex-row gap-6">
         <div className="flex-1">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
 
         <div className="pt-10 flex flex-col items-center">
-  {selectedCourse === "all" ? (
+  {(courses.length > 0 && selectedCourse === "all") ? (
     <p className="text-xs text-gray-600 text-center">
       Select a course first
     </p>
@@ -182,10 +191,10 @@ const [cr, setCr] = useState(null);
      {/* Teacher & CR Info */}
 {selectedCourse !== "all" && (
   <div className="w-full mb-6 rounded-xl border bg-white shadow-sm px-5 py-4">
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
       {/* Teacher */}
-      <div>
+      <div className='flex-1 min-w-0'>
         <p className="text-xs uppercase tracking-wide text-gray-500">
           Course Teacher
         </p>
@@ -201,7 +210,7 @@ const [cr, setCr] = useState(null);
       <div className="hidden sm:block w-px h-10 bg-gray-200" />
 
       {/* CR */}
-      <div>
+      <div className='flex-1 min-w-0'>
         <p className="text-xs uppercase tracking-wide text-gray-500">
           Class Representative
         </p>
@@ -236,11 +245,7 @@ const [cr, setCr] = useState(null);
   </div>
 )}
 
-  {selectedCourse === "all" ? (
-    <p className="text-xs text-gray-600 text-center">
-      Select a course first
-    </p>
-  ) : students.length === 0 ? (
+  {students.length === 0 && selectedCourse!='all' ? (
     <p className="text-xs text-gray-500 text-center">
       No students have joined this course yet.
     </p>
@@ -251,6 +256,7 @@ const [cr, setCr] = useState(null);
         student={students}
         selectedCourse={selectedCourse}
         enrollmentId={selectedCourse}
+        getEnrolled={getEnrolled}
       />
     </>
   )}
