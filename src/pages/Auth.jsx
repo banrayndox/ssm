@@ -51,6 +51,7 @@ const Auth = ({ onLogin }) => {
          toast.error("Something went wrong!");
          }
         } catch (error) {
+          // console.log(error)
           dispatch({type: "LOGOUT"})
         toast.error(error?.response?.data?.message || "Something went wrong!");
         }
