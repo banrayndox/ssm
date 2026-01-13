@@ -4,7 +4,9 @@ import api from "../helper/api.js";
 import { useNavigate } from "react-router";
 import Footer from "../components/Footer.jsx";
 import { Toaster, toast } from "react-hot-toast";
+import Loader from "../components/Loader.jsx";
 const Auth = ({ onLogin }) => {
+  const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState("login");
   const[name,setName] = useState("")
   const [email, setEmail] = useState("");
@@ -38,7 +40,7 @@ const Auth = ({ onLogin }) => {
 
       case "login":
         try {
-
+        setLoading(false)
           const response = await api.post('/auth/login', {email, password})
           if(response.data.success){
           dispatch({
@@ -54,12 +56,15 @@ const Auth = ({ onLogin }) => {
           // console.log(error)
           dispatch({type: "LOGOUT"})
         toast.error(error?.response?.data?.message || "Something went wrong!");
+        }finally{
+          setLoading(false)
         }
          break;
 
 
       case "register": 
     try {
+      setLoading(true)
       const response = await api.post('/auth/register',{name, email,studentId, departmentId, password})
       if(response.data.success){
       toast.success(`Login Now!`);
@@ -69,6 +74,8 @@ const Auth = ({ onLogin }) => {
       }
     } catch (error) {
       
+    }finally{
+      setLoading(false)
     }
         break;
 
@@ -112,6 +119,7 @@ const Auth = ({ onLogin }) => {
   return (<>
 
   <div className="min-h-screen flex items-center justify-evenly bg-gray-50 px-4 bg-cover bg-center bg-no-repeat" >
+    {loading && <Loader />}
     <div className="max-sm:hidden ">
   <h1 className="sm:text-2xl font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
     Smart Section Management
