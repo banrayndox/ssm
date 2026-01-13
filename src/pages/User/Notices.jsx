@@ -4,8 +4,9 @@ import PostNewNotice from "../../components/CR/PostNewNotice";
 import { AppContext } from "../../store/AppContext";
 import api from "../../helper/api";
 import { FaPaperPlane } from "react-icons/fa6";
-
+import Loader from "../../components/Loader";
 const Notices = () => {
+  const [loading, setLoading] = useState(false)
   const { state } = useContext(AppContext);
   const role = state?.user?.role;
   const userId = state?.user?._id;
@@ -16,13 +17,15 @@ const Notices = () => {
 
   const getList = async () => {
     try {
+      setLoading(true)
       const response = await api.post("/common/get-communication", { type: "notice" });
       if (response.data.success) {
-        // console.log('success')
         setList(response.data.communications);
       }
     } catch (err) {
       console.error(err);
+    }finally{
+   setLoading(false)
     }
   };
 
@@ -54,6 +57,7 @@ const canAddNotice = () => {
 
   return (
     <div className="relative">
+      {loading && <Loader />}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div

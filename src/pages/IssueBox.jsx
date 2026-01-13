@@ -4,8 +4,9 @@ import SubmitIssue from '../components/User/SubmitIssue';
 import { MdComment } from "react-icons/md";
 import { AppContext } from '../store/AppContext';
 import api from '../helper/api';
-
+import Loader from '../components/Loader';
 const IssueBox = () => {
+  const [loading, setLoading] = useState(false)
   const { state } = useContext(AppContext);
   const role = state?.user?.role;
   const userId = state?.user?._id;
@@ -20,10 +21,13 @@ const IssueBox = () => {
   // Fetch issues
   const getList = async () => {
     try {
+      setLoading(true)
       const response = await api.post('/common/get-communication', { type: 'issue' });
       if (response.data.success) setList(response.data.communications);
     } catch (err) {
       console.error(err);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -45,6 +49,7 @@ const IssueBox = () => {
 
   return (
     <div className='relative'>
+      {loading && <Loader />}
       {/* Submit Issue Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">

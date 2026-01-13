@@ -4,16 +4,25 @@ import AddNewTask from '../../components/CR/AddNewTask'
 import { AppContext } from '../../store/AppContext'
 import { FaTasks } from "react-icons/fa";
 import api from '../../helper/api'
+import Loader from '../../components/Loader';
 const Tasks = () => {
+  const [loading, setLoading] = useState(false)
   const {state} = useContext(AppContext)
   const role = state?.user?.role
 
  const [list, setList] = useState([])
    const getList = async () => {
-    const response = await api.get('/common/get-task')
+try {
+  setLoading(true)
+      const response = await api.get('/common/get-task')
     if(response.data.success){
       setList(response.data.tasks)
     }
+} catch (error) {
+  
+}finally{
+  setLoading(false)
+}
   }
   useEffect(()=>{
     getList()
@@ -22,6 +31,7 @@ const Tasks = () => {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <div>
+      {loading && <Loader />}
       {isOpen && (
       <div className="flex fixed inset-0 z-50 items-center justify-center">
       <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsOpen(false)}></div>

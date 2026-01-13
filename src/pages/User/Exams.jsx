@@ -4,9 +4,9 @@ import AddExam from '../../components/Teacher/AddExam'
 import { AppContext } from '../../store/AppContext'
 import { RiCalendarScheduleLine } from "react-icons/ri";
 import api from '../../helper/api'
-
+import Loader from '../../components/Loader';
 const Exams = () => {
-
+ const [loading, setLoading] = useState(false)
 
   const {state} = useContext(AppContext)
   const role = state?.user?.role
@@ -18,12 +18,15 @@ const Exams = () => {
 
   const getList = async () => {
     try {
+      setLoading(true)
       const response = await api.post('/common/get-communication',{type:'exam'})
       if(response.data.success){
         setList(response.data.communications)
       }
     } catch (err) {
       console.error(err)
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -59,6 +62,7 @@ const Exams = () => {
 
   return (
     <div className='relative'>
+      {loading && <Loader />}
       {isOpen && (
         <div className="flex fixed inset-0 z-50 items-center justify-center">
           <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsOpen(false)}></div>

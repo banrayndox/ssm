@@ -4,8 +4,9 @@ import CreateNewPoll from '../../components/CR/CreateNewPoll'
 import { AppContext } from '../../store/AppContext'
 import { FaPoll } from "react-icons/fa";
 import api from '../../helper/api'
-
+import Loader from '../../components/Loader';
 const Polls = () => {
+  const [loading, setLoading] = useState(false)
   const {state} = useContext(AppContext)
   const role = state?.user?.role
   const userId = state?.user?._id
@@ -17,14 +18,17 @@ const Polls = () => {
   // Fetch polls
   const getList = async () => {
     try {
+      setLoading(true)
       const response = await api.post('/common/get-communication',{type:'poll'})
       if(response.data.success){
         setList(response.data.communications)
       } else {
-        console.log('Failed to fetch polls')
+      
       }
     } catch (err) {
-      console.error(err)
+
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -69,6 +73,7 @@ const canAddPoll = () => {
 
   return (
     <div className='relative'>
+            {loading && <Loader />}
       {/* Add poll modal */}
       {isOpen && (
         <div className="flex fixed inset-0 z-50 items-center justify-center">

@@ -4,8 +4,9 @@ import AddLecture from "../components/AddLecture.jsx";
 import { AppContext } from "../store/AppContext.jsx";
 import api from "../helper/api";
 import { FaChalkboardTeacher } from "react-icons/fa";
-
+import Loader from "../components/Loader.jsx";
 const Lectures = () => {
+  const [loading, setLoading] = useState(false)
   const { state } = useContext(AppContext);
   const role = state?.user?.role;
   const userId = state?.user?._id;
@@ -15,12 +16,15 @@ const Lectures = () => {
 
   const getList = async () => {
     try {
+      setLoading(true)
       const response = await api.post("/common/get-communication", { type: "lecture" });
       if (response.data.success) {
         setList(response.data.communications);
       }
     } catch (err) {
       console.error(err);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -50,6 +54,7 @@ const Lectures = () => {
 
   return (
     <div className="relative">
+      {loading && <Loader />}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div

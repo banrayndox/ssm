@@ -7,7 +7,9 @@ import CreateCourse from '../../components/Teacher/CreateCourse';
 import JoinCourse from '../../components/User/JoinCourse'
 import ChangePassKey from '../../components/Teacher/ChangePassKey';
 import toast from 'react-hot-toast';
+import Loader from '../../components/Loader';
 const Students = () => {
+  const [loading, setLoading] = useState(false)
   const { state } = useContext(AppContext);
   const role = state?.user?.role;
   const userId = state?.user?._id;
@@ -30,9 +32,10 @@ const Students = () => {
   // Fetch students
   const getEnrolled = async () => {
     try {
+      setLoading(true)
       const response = await api.post('/common/get-enrolled', {enrollmentId : selectedCourse});
       if (response?.data?.success) {
-      setStudents(response.data?.students);
+      setStudents(response.data?.students || []);
       setTeacher(response.data?.teacher || null);
       setCr(response.data?.cr || null);
      if(role=='teacher') setPasskey(response?.data?.passkey)
@@ -40,6 +43,8 @@ const Students = () => {
       }
     } catch (err) {
       console.error(err);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -53,6 +58,7 @@ const Students = () => {
 
   const refreshUserCourses = async () => {
   try {
+    setLoading(true)
     const res = await api.get("/auth/get-authenticated"); 
     if (res.data.success) {
     
@@ -64,6 +70,8 @@ const Students = () => {
     }
   } catch (err) {
     console.error("Failed to refresh user courses:", err);
+  }finally{
+    setLoading(false)
   }
 };
 useEffect(() => {
@@ -78,6 +86,7 @@ const [cr, setCr] = useState(null);
  const [isCOpen, setIsCOpen] = useState(false)
   return (
     <div className="px-3 sm:px-5 md:px-6 py-4 relative w-full">
+      {loading && <Loader />}
          {isOpen && (
       <div className="flex fixed inset-0 z-50 items-center justify-center">
       <div className='absolute inset-0 bg-black/50 backdrop-blur-sm' onClick={()=> setIsOpen(false)}></div>
