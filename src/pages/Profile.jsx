@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import api from "../helper/api";
+import Loader from "../components/Loader";
 import { AppContext } from "../store/AppContext";
   import toast from "react-hot-toast";
 const Profile = ({userId, isClose}) => {
+  const [loading, setLoading] = useState(false);
  const {state} = useContext(AppContext)
  const currId = state?.user?._id
   const [tab, setTab] = useState("view");
@@ -23,7 +25,9 @@ const Profile = ({userId, isClose}) => {
   const [roomNo, setRoomNo] = useState(null);
 
   const getProfile = async() => {
-    const response = await api.post('/common/profile',{userId})
+try {
+  setLoading(true)
+      const response = await api.post('/common/profile',{userId})
     if(response.data.success){
       const user = response.data.user
     setName(user?.name)
@@ -38,6 +42,11 @@ const Profile = ({userId, isClose}) => {
     setTeacherInitial(user?.teacherInitial)
     setRoomNo(user?.roomNo)
     }
+} catch (error) {
+  
+}finally{
+  setLoading(false)
+}
   }
   useEffect(()=>{
     getProfile()
@@ -70,7 +79,9 @@ const handleEditProfile = async () =>{
 
 
   return (
+
     <div className="max-w-4xl mx-auto p-6">
+          {loading && <Loader /> }
       <div className="bg-white border rounded-2xl p-8 shadow-sm">
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-6 mb-8">
