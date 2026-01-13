@@ -70,7 +70,7 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned, getEnroll
     <>
       {/* Profile Modal */}
       {profileOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className=" fixed inset-0 z-50 flex items-center justify-center">
           <div
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={() => setProfileOpen(false)}
@@ -82,7 +82,7 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned, getEnroll
       )}
 
       {/* Student Card */}
-      <div className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:shadow-sm transition">
+      <div className=" mb-2 w-full bg-white border border-gray-200 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:shadow-sm transition">
         
         {/* Left: Avatar + Info */}
         <div className="flex items-center gap-4">

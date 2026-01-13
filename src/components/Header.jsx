@@ -77,6 +77,7 @@ const Header = () => {
       {/* <JoinCourse /> */}
       {/* <CreateCourse /> */}
      <Navbar />
+     <div className="mt-15"></div>
       <Footer />
     </>
   );
