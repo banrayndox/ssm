@@ -9,14 +9,16 @@ import {
   HiOutlineUserAdd,
   HiOutlineRefresh
 } from "react-icons/hi"
+import Loader from "../../components/Loader"
 
 const Overview = () => {
-
+const [loading, setLoading] = useState(false);
   const [isAssignTeacherOpen, setIsAssignTeacherOpen] = useState(false)
   const [dashboard, setDashboard] = useState({})
 
   const getCount = async () => {
     try {
+       setLoading(true);
       const response = await api.get("/authority/dashboard", {
       headers: { "Cache-Control": "no-cache" } })
       if (response.data.success) {
@@ -25,6 +27,8 @@ const Overview = () => {
       
     } catch (err) {
       console.log("Failed to load dashboard data", err)
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -47,6 +51,7 @@ const items = [
 
   return (
     <div className="relative min-h-screen bg-gray-50">
+       { loading && <Loader /> }
       {/* {isCrOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsCrOpen(false)} />
