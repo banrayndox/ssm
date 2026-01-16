@@ -226,7 +226,7 @@ const Auth = ({ onLogin }) => {
       </>
     )}
 
-    <button className="w-full mt-4 bg-indigo-900 text-white text-sm py-2 rounded-md hover:bg-gray-800 transition">
+    <button id='button' className="w-full mt-4 bg-indigo-900 text-white text-sm py-2 rounded-md hover:bg-gray-800 transition">
       {{
         login: "Login",
         register: "Register",
