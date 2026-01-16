@@ -150,6 +150,7 @@ const Auth = ({ onLogin }) => {
       <div className="mb-3">
         <label className="text-xs font-medium text-gray-600">Email</label>
         <input
+          id='email'
           type="email"
           className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-800"
           value={email}
@@ -163,6 +164,7 @@ const Auth = ({ onLogin }) => {
       <div className="mb-3">
         <label className="text-xs font-medium text-gray-600">Password</label>
         <input
+          id='password'
           type="password"
           className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-800"
           onChange={(e) => setPassword(e.target.value)}
