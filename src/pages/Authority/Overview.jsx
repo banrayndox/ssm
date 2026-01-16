@@ -100,7 +100,7 @@ const items = [
         <div className="flex flex-col gap-3">
           {quickActions.map((item) => (
             <button
-              id={item.label}
+              id={item.label.replace(/\s+/g, '-').toLowerCase()}
               key={item.label}
               onClick={item.action}
               className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
