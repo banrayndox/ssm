@@ -260,14 +260,14 @@ const [cr, setCr] = useState(null);
     </p>
   ) : (
    
-    <>
-      <AssignedStudents isAssigned={cr==null ? true : false}
+    <div>
+      <AssignedStudents id='list' isAssigned={cr==null ? true : false}
         student={students}
         selectedCourse={selectedCourse}
         enrollmentId={selectedCourse}
         getEnrolled={getEnrolled}
       />
-    </>
+    </div>
   )}
 </div>
 
