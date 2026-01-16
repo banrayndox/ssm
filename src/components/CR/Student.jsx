@@ -67,7 +67,7 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned, getEnroll
   };
 
   return (
-    <>
+    <div id="student">
       {/* Profile Modal */}
       {profileOpen && (
         <div className=" fixed inset-0 z-50 flex items-center justify-center">
@@ -141,7 +141,7 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned, getEnroll
 </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
