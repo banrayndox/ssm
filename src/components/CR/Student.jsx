@@ -95,10 +95,10 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned, getEnroll
 
           <div className="leading-tight">
             <p className="text-sm font-semibold text-gray-900"
-            id={student?.name} >
+            id='name'  >
               {student?.name}
             </p>
-            <p className="text-xs text-gray-500">
+            <p id='id' className="text-xs text-gray-500">
               ID: {student?.studentId || student?.teacherId}
             </p>
           </div>
