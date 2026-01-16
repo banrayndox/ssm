@@ -94,7 +94,8 @@ const Student = ({ student, text, onDeleted, enrollmentId, isAssigned, getEnroll
           </button>
 
           <div className="leading-tight">
-            <p className="text-sm font-semibold text-gray-900">
+            <p className="text-sm font-semibold text-gray-900"
+            id={student?.name} >
               {student?.name}
             </p>
             <p className="text-xs text-gray-500">

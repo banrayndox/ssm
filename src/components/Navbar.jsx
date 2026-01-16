@@ -49,6 +49,7 @@ const Navbar = () => {
   <div className="flex flex-wrap bg-gray-100 p-1 justify-center gap-1 rounded-full shadow-inner">
     {items.map((item) => (
       <button
+       id={item}
         key={item}
         onClick={() => setActive(item)}
         className={`
