@@ -9,7 +9,7 @@ const AssignedStudents = ({student, selectedCourse, enrollmentId, isAssigned, ge
   return (
     <>
 
-       {student.map((student,i) => <Student className="p-2"  key={i} student={student} isAssigned={isAssigned} enrollmentId={enrollmentId} selectedCourse={selectedCourse} getEnrolled={getEnrolled} text="assign" />)}
+       {student.map((student,i) => <Student id='userList' className="p-2"  key={i} student={student} isAssigned={isAssigned} enrollmentId={enrollmentId} selectedCourse={selectedCourse} getEnrolled={getEnrolled} text="assign" />)}
 
     </>
   )
